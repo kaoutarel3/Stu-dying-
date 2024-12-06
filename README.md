@@ -1,4 +1,4 @@
-# STU(DYING)
+#**STU(DYING)**
 ---
 This project leverages Streamlit to develop an interactive platform where users can upload PDF documents.  
 The system processes the PDF to automatically generate flashcards, aiding in the extraction and memorization of key information.  
