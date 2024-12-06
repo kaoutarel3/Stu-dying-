@@ -1,9 +1,25 @@
-# Project1
+# Stu(dying)
 ---
+This project leverages Streamlit to develop an interactive platform where users can upload PDF documents.
 
+The system processes the PDF to automatically generate flashcards, aiding in the extraction and memorization of key information.
+
+Additionally, a chatbot is integrated to provide on-demand, context-driven responses based on the content of the uploaded PDF, facilitating efficient information retrieval and enhancing the user learning experience. 😁
+---
+#Building the chatbot
+
+We used Ollama models and embedding to create a Streamlit app capable of answering questions on the uploaded PDF document.
+
+The models used
+##llama3.2:
+Llama 3.2 is a language model introduced by Meta in 2024, featuring a variety of model sizes to suit different needs.
+
+##mxbai-embed-large:
+It was trained with no overlap of the MTEB data, indicating that the model generalizes well across several domains, tasks, and text lengths when embedding your dataset.
+---
 # PDF to Q&A Converter
 
-This project is a **Streamlit-based application** that processes PDF documents to generate **question-and-answer pairs** based on the content. It uses **PyMuPDF** and **pdfplumber** for text and metadata extraction, and leverages NVIDIA's **NeMo Inference API** for generating Q&A responses.
+It processes PDF documents to generate **question-and-answer pairs** based on the content. It uses **PyMuPDF** and **pdfplumber** for text and metadata extraction, and leverages NVIDIA's **NeMo Inference API** for generating Q&A responses.
 
 ## Features
 - Extracts **metadata** and **text** from uploaded PDFs.
