@@ -111,79 +111,98 @@ def get_chatbot_response(prompt):
     return response['text']
 ```
 
-# PDF to Q&A Converter
-It processes PDF documents to generate **question-and-answer pairs** based on the content. It uses **PyMuPDF** and **pdfplumber** for text and metadata extraction, and leverages NVIDIA's **NeMo Inference API** for generating Q&A responses.
+# Flashcads generation
+## Outline
 
-## Features
-- Extracts **metadata** and **text** from uploaded PDFs.
-- Splits text into manageable chunks for processing.
-- Generates **5 relevant questions and answers** from each text chunk using the NVIDIA NeMo API.
-- Outputs the Q&A pairs as a downloadable text file.
+The PDF to Q&A Converter is a Streamlit application designed to extract text from uploaded PDF files and generate context-aware Q&A pairs using an advanced AI model. This tool supports multi-language PDFs, automated chunking of text, and language translation for comprehensive usability.
 
-## Installation
-
-### Prerequisites
-1. Python 3.8 or higher.
-2. NVIDIA NeMo account with an API key and endpoint.
-3. NVIDIA-compatible environment for accessing the NeMo model via the OpenAI client.
-
-### Steps
-1. Clone the repository:
+## Prerequisites
+###Python Environment
+Python 3.9 or newer.
+### Required Python Libraries
+```bash
+ pip install streamlit pdfplumber langdetect deep-translator
+```
+### Ollama API
+1. Download Ollama
+2. Download Required Models
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+    ollama pull llama3.2
    ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Replace placeholders for the API key and endpoint in the code:
+   ## Importing libraries
    ```python
-   API_KEY = '<your API key>'
-   ENDPOINT = '<your inference endpoint>'
+    import streamlit as st
+    import pdfplumber
+    import io
+    import re
+    from deep_translator import GoogleTranslator
+    from langdetect import detect
    ```
+   ## Reading the PDF File
+   ```python
+    def extract_text_and_metadata(pdf_file):
+        """Extract text and metadata from a PDF file."""
+        pdf_content = []
+        try:
+            pdf_file.seek(0)  # Reset the file pointer
+            with pdfplumber.open(io.BytesIO(pdf_file.read())) as pdf:
+                for page_num, page in enumerate(pdf.pages):
+                    text = page.extract_text()
+                    page_data = {
+                        'page_number': page_num + 1,
+                        'text': text,
+                    }
+                    pdf_content.append(page_data)
+        except Exception as e:
+            st.error(f"Error extracting PDF content: {str(e)}")
+        return pdf_content
 
-4. Run the Streamlit app:
-   ```bash
-   streamlit run app.py
-   ```
+## Splitting Text into Chunks
+------------------------------
+```python
 
-## Usage
-1. Open the Streamlit app in your browser (usually at `http://localhost:8501`).
-2. Upload a PDF file.
-3. Wait for the app to process the PDF and generate Q&A pairs.
-4. Download the generated Q&A file as a `.txt` file.
+    def split_text_into_chunks(text, max_words=300):
+        """Split text into smaller chunks with a maximum word count."""
+        words = text.split()
+        chunks = []
+        current_chunk = []
 
-## File Structure
-- `app.py`: Main application script.
-- `requirements.txt`: List of dependencies.
-- `README.md`: Documentation for the project.
+        for word in words:
+            if len(current_chunk) + 1 > max_words:
+                chunks.append(" ".join(current_chunk))
+                current_chunk = [word]
+            else:
+                current_chunk.append(word)
 
-## Dependencies
-- `streamlit`: For the user interface.
-- `PyMuPDF (fitz)`: For extracting text and metadata from PDFs.
-- `pdfplumber`: For detailed text and table extraction.
-- `pandas`: For saving Q&A data (optional in this project).
-- `openai`: For interacting with NVIDIA NeMo models.
-- `regex`: For parsing Q&A responses.
-
-## How It Works
-1. **PDF Processing**:
-   - PyMuPDF extracts metadata and text from the PDF.
-   - pdfplumber extracts detailed text content.
-2. **Text Chunking**:
-   - The text is split into chunks (max 300 words) for processing.
-3. **Q&A Generation**:
-   - Each chunk is sent to the NVIDIA NeMo API to generate relevant Q&A pairs.
-4. **Output**:
-   - Extracted Q&A pairs are processed and formatted into a downloadable text file.
-
-## Example Output
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
+        return chunks
 ```
-Question: What is the purpose of the Streamlit app?
-Answer: The app processes PDF files to extract Q&A pairs.
+## Detecting and Translating Language
+```python
 
-Question: How are the PDFs processed?
-Answer: PDFs are processed using PyMuPDF and pdfplumber for text and metadata extraction.
-...
+    def detect_language(text):
+        """Detect the language of the provided text."""
+        try:
+            detected_lang = detect(text)
+            return detected_lang
+        except Exception as e:
+            return "en"  # Default to English if detection fails
+
+    def translate_text(text, source_lang, target_lang):
+        """Translate text from the source language to the target language."""
+        try:
+            translated = GoogleTranslator(source=source_lang, target=target_lang).translate(text)
+            return translated
+        except Exception as e:
+            return f"Translation error: {str(e)}"
 ```
+The application integrates AI-driven Q&A generation with language detection and translation, ensuring accessibility for users worldwide. The **"llama3:8b"** model is employed for contextual understanding and response generation.
+
+
+
+
+        
+
+
+   
