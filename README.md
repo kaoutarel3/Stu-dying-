@@ -1,19 +1,22 @@
 # STU(DYING) 
 ---
-This project leverages Streamlit to develop an interactive platform where users can upload PDF documents.  
-The system processes the PDF to automatically generate flashcards, aiding in the extraction and memorization of key information.  
-Additionally, a chatbot is integrated to provide on-demand, context-driven responses based on the content of the uploaded PDF, facilitating efficient information retrieval and enhancing the user learning experience. 😊
+This project leverages Streamlit to develop an interactive platform where users can upload PDF documents. The system processes the PDF to automatically generate flashcards, aiding in the extraction and memorization of key information. Additionally, a chatbot is integrated to provide on-demand, context-driven responses based on the content of the uploaded PDF, facilitating efficient information retrieval and enhancing the user learning experience.😊
 
 ---
 # Building the chatbot
+## Outline
+The chatbot is designed to provide instant, context-aware responses based on the content of uploaded PDFs.
+Here's a simple demo showcasing how the chatbot was built, highlighting the steps , model integration, and creating the user interface.
 
-We used Ollama models and embedding to create a Streamlit app capable of answering questions on the uploaded PDF document.
-**##The models used:**
-**llama3.2:**
-Llama 3.2 is a language model introduced by Meta in 2024, featuring a variety of model sizes to suit different needs.
+## Prerequisites
+### Python Environment
+Python 3.9 or newer.
+### Required Python Libraries
+.. code-block:: bash
 
-**mxbai-embed-large**:  
-It was trained with no overlap of the MTEB data, indicating that the model generalizes well across several domains, tasks, and text lengths when embedding your dataset.
+   pip install streamlit pdfplumber PyPDF2 langdetect langchain-community langchain-openai chromadb
+
+
 
 # PDF to Q&A Converter
 It processes PDF documents to generate **question-and-answer pairs** based on the content. It uses **PyMuPDF** and **pdfplumber** for text and metadata extraction, and leverages NVIDIA's **NeMo Inference API** for generating Q&A responses.
